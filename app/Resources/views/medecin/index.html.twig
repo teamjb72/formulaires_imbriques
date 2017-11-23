@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Medecins list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for medecin in medecins %}
+            <tr>
+                <td><a href="{{ path('medecin_show', { 'id': medecin.id }) }}">{{ medecin.id }}</a></td>
+                <td>{{ medecin.name }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('medecin_show', { 'id': medecin.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('medecin_edit', { 'id': medecin.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('medecin_new') }}">Create a new medecin</a>
+        </li>
+    </ul>
+{% endblock %}

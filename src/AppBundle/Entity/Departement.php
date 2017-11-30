@@ -41,7 +41,7 @@ class Departement
     private $villes;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Region")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Region", inversedBy="departements")
      */
     private $region;
 

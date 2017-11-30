@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Departement;
 use AppBundle\Entity\Region;
+use AppBundle\Entity\Ville;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -37,13 +38,35 @@ class MedecinType extends AbstractType
 
             }
         );
+
+        $builder->addEventListener(
+            FormEvents::POST_SET_DATA,
+            function (FormEvent $event){
+                $data = $event->getData();
+                $ville= $data->getVille();
+                $form = $event->getForm();
+                /* @var $ville Ville */
+                if ($ville) {
+                   $departement = $ville->getDepartement();
+                   $region = $departement->getRegion();
+                   $this->addDepartementField($form, $region);
+                   $this->addVilleField($form, $departement);
+                   $form->get('region')->setData($region);
+                    $form->get('departement')->setData($departement);
+
+                }else{
+                    $this->addDepartementField($form, null);
+                    $this->addVilleField($form, null);
+                }
+            }
+        );
     }
 
     /** Rajoute un champ ville au formulaire
      * @param FormInterface $form
      * @param Departement $departement
      */
-    private function addVilleField(FormInterface $form, Departement $departement)
+    private function addVilleField(FormInterface $form, Departement $departement = null)
     {
         $form->add(
             'ville',
@@ -51,8 +74,8 @@ class MedecinType extends AbstractType
 
             [
                 'class' => 'AppBundle\Entity\Ville',
-                'placeholder' => 'Sélectionnez votre ville',
-                'choices' => $departement->getVilles()
+                'placeholder' => $departement ? 'Sélectionnez votre ville' : 'Selectionner dabord votre département',
+                'choices' => $departement? $departement->getVilles() : []
 
             ]
         );
@@ -64,7 +87,7 @@ class MedecinType extends AbstractType
      * @param FormInterface $form
      * @param Region $region
      */
-    private function addDepartementField(FormInterface $form, Region $region)
+    private function addDepartementField(FormInterface $form, Region $region = null)
     {
         $builder = $form->getConfig()->getFormFactory()->createNamedBuilder(
             'departement',
@@ -72,11 +95,12 @@ class MedecinType extends AbstractType
             null,
             [
                 'class' => 'AppBundle\Entity\Departement',
-                'placeholder' => 'Sélectionnez votre département',
+                'placeholder' => $region ? 'Sélectionnez votre département' : 'Selectionner d abord une region',
                 'mapped' => false,
                 'required' => false,
                 'auto_initialize' => false,
-                'choices' => $region->getDepartements()
+                'empty_data' => null,
+                'choices' => $region ? $region->getDepartements(): []
 
             ]
         );

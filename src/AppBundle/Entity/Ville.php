@@ -36,7 +36,7 @@ class Ville
     private $code;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Departement")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Departement", inversedBy="villes")
      */
     private $departement;
 
@@ -125,6 +125,6 @@ class Ville
 
     public function __toString()
     {
-        return $this->name;
+        return $this->code. ' ' .$this->name;
     }
 }

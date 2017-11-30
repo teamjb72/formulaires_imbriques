@@ -3,19 +3,23 @@
 {% block body %}
     <h1>Medecins list</h1>
 
-    <table>
+    <table class="table table-striped">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
+                <th>Ville</th>
+                <th>Departement</th>
+                <th>Region</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
         {% for medecin in medecins %}
             <tr>
-                <td><a href="{{ path('medecin_show', { 'id': medecin.id }) }}">{{ medecin.id }}</a></td>
                 <td>{{ medecin.name }}</td>
+                <td>{{ medecin.ville }}</td>
+                <td>{{ medecin.ville.departement }}</td>
+                <td>{{ medecin.ville.departement.region }}</td>
                 <td>
                     <ul>
                         <li>
@@ -31,9 +35,7 @@
         </tbody>
     </table>
 
-    <ul>
-        <li>
-            <a href="{{ path('medecin_new') }}">Create a new medecin</a>
-        </li>
-    </ul>
+    <p>
+            <a href="{{ path('medecin_new') }}" class="btn btn-primary">Creer un Medecin</a>
+    </p>
 {% endblock %}
